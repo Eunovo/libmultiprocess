@@ -86,6 +86,10 @@ endif()
 # Prevent include directories from parent project from leaking into this one.
 set_property(DIRECTORY PROPERTY INCLUDE_DIRECTORIES "")
 
+# Coverage support
+configure_file(cmake/script/Coverage.cmake Coverage.cmake USE_SOURCE_PERMISSIONS COPYONLY)
+configure_file(cmake/script/cov_tool_wrapper.sh.in cov_tool_wrapper.sh.in USE_SOURCE_PERMISSIONS COPYONLY)
+
 # Generated C++ preprocessor defines
 configure_file(include/mp/config.h.in "${CMAKE_CURRENT_BINARY_DIR}/include/mp/config.h")
 
@@ -138,6 +142,12 @@ target_include_directories(multiprocess PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+
+if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
+  target_compile_options(multiprocess PUBLIC --coverage)
+  target_link_options(multiprocess PUBLIC --coverage)
+endif()
+
 target_link_libraries(multiprocess PUBLIC CapnProto::capnp)
 target_link_libraries(multiprocess PUBLIC CapnProto::capnp-rpc)
 target_link_libraries(multiprocess PUBLIC CapnProto::kj)
