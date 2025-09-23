@@ -19,6 +19,11 @@ if (MP_STANDALONE)
   add_custom_target(check DEPENDS mpcheck)
 endif()
 
+set(abs_top_srcdir ${PROJECT_SOURCE_DIR})
+set(abs_top_builddir ${PROJECT_BINARY_DIR})
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/mp/test/constants.py.in ${CMAKE_CURRENT_BINARY_DIR}/mp/test/constants.py USE_SOURCE_PERMISSIONS @ONLY)
+file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/mp/test/test.py ${CMAKE_CURRENT_BINARY_DIR}/mp/test/test.py COPY_ON_ERROR)
+
 if(BUILD_TESTING AND TARGET CapnProto::kj-test)
   set_property(SOURCE ${MP_PROXY_HDRS} PROPERTY GENERATED 1)
 

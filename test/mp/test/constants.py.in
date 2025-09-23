@@ -1,0 +1,2 @@
+SRC_DIR="@abs_top_srcdir@"
+BUILD_DIR="@abs_top_builddir@"
