@@ -28,12 +28,22 @@ if(BUILD_TESTING AND TARGET CapnProto::kj-test)
     mp/test/foo.h
     mp/test/test.cpp
   )
+  add_executable(mpfoo
+    ${MP_PROXY_HDRS}
+    mp/test/foo-types.h
+    mp/test/foo.h
+    mp/test/foo.cpp
+  )
   include(${PROJECT_SOURCE_DIR}/cmake/TargetCapnpSources.cmake)
   target_capnp_sources(mptest ${CMAKE_CURRENT_SOURCE_DIR} mp/test/foo.capnp)
   target_include_directories(mptest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
   target_link_libraries(mptest PRIVATE CapnProto::kj-test)
   target_link_libraries(mptest PRIVATE Threads::Threads)
+  target_capnp_sources(mpfoo ${CMAKE_CURRENT_SOURCE_DIR} mp/test/foo.capnp)
+  target_include_directories(mpfoo PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+  target_link_libraries(mpfoo PRIVATE CapnProto::kj-test)
+  target_link_libraries(mpfoo PRIVATE Threads::Threads)
 
-  add_dependencies(mptests mptest)
+  add_dependencies(mptests mptest mpfoo)
   add_test(NAME mptest COMMAND mptest)
 endif()
